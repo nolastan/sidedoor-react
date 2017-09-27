@@ -51,7 +51,8 @@ class Calendar extends Component {
             onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
             focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
             onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-            isDayBlocked={this.isDayBlocked} />
+            isDayBlocked={this.isDayBlocked}
+            numberOfMonths={1} />
           <input type="hidden" value={startDateString || ""} name="entry.1804760333" />
           <input type="hidden" value={endDateString || ""} name="entry.1918302671" />
         </div>

@@ -30,6 +30,15 @@ const Submit = Input.extend`
   color: white;
   border: none;
   border-radius: 50px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.10);
+  cursor: pointer;
+  -webkit-appearance: none;
+  transition: box-shadow 1px ease-in;
+
+  &:hover {
+    box-shadow: 0 3px 6px 0 rgba(0,0,0,0.15);
+    background: ${Color.accentFocus};
+  }
 `
 
 class ListingDetail extends Component {
