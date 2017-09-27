@@ -11,7 +11,6 @@ class Carousel extends Component {
       slidesToScroll: 1,
       autoplay: true,
       autoplaySpeed: 5000,
-      adaptiveHeight: true
     };
     return (
       <Slider {...settings}>
