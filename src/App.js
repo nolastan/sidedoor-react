@@ -19,20 +19,21 @@ class App extends Component {
   }
 
   componentWillMount() {
-    fetch(`http://localhost:3000/calendar.json?url=https://www.airbnb.com/calendar/ical/18123650.ics?s=fba76265b1bf3df892d6b38186762fea`)
-    // fetch(`http://sidedoor-rails.herokuapp.com/calendar.json?url=https://www.airbnb.com/calendar/ical/18123650.ics?s=fba76265b1bf3df892d6b38186762fea`)
+    var icalUrl = 'https://www.airbnb.com/calendar/ical/18123650.ics?s=fba76265b1bf3df892d6b38186762fea'
+    fetch(`http://sidedoor-rails.herokuapp.com/calendar.json?url=${icalUrl}`)
       .then(res => res.json())
-      .then(bookings => this.setState({loading: false, bookings: bookings}));
+      .then(bookings => this.setState({loading: false, bookings: bookings})
+    )
   }
 
   isDayBlocked(date) {
+    if(!this.state.bookings.length) { return false }
     for (var i = 0; i < this.state.bookings.length; i++) {
       if(moment(date).isBetween(this.state.bookings[i].begin, this.state.bookings[i].end)) {
         return true
       }
     }
-    this.state.bookings.map(function(booking) {
-    })
+    return false
   }
 
   render() {
@@ -41,7 +42,6 @@ class App extends Component {
     } else {
       return (
         <div className="App">
-          {this.state.bookings[21].begin}
           <div className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h2>Welcome to React</h2>
