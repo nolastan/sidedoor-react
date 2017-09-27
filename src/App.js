@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Calendar from './components/Calendar'
 import Carousel from './components/Carousel'
+import Map from './components/Map'
 
 class App extends Component {
 
@@ -15,6 +16,7 @@ class App extends Component {
           <textarea name="entry.373211989" placeholder="Message"></textarea>
           <input type="submit" />
         </form>
+        <Map />
       </main>
     )
   }
