@@ -22,16 +22,18 @@ class App extends Component {
     var icalUrl = 'https://www.airbnb.com/calendar/ical/18123650.ics?s=fba76265b1bf3df892d6b38186762fea'
     fetch(`http://sidedoor-rails.herokuapp.com/calendar.json?url=${icalUrl}`)
       .then(res => res.json())
-      .then(bookings => this.setState({loading: false, bookings: bookings})
+      .then(blockedRanges => this.setState({loading: false, blockedRanges: blockedRanges})
     )
   }
 
   isDayBlocked(date) {
-    for (var i = 0; i < this.state.bookings.length; i++) {
-      if(moment(date).isBetween(this.state.bookings[i].begin, this.state.bookings[i].end, true)) {
-        return true
-      }
-    }
+    return this.state.blockedRanges.some(element => {
+      return moment(date).isBetween(
+        element.begin,
+        element.end,
+        true // inclusive
+      )
+    })
   }
 
   render() {
@@ -41,6 +43,20 @@ class App extends Component {
     const endDateString = this.state.endDate &&
       this.state.endDate.format('YYYY-MM-DD');
 
+    if(this.state.loading) {
+      var calendar = <p>Loading availability…</p>
+    } else {
+      var calendar = <DateRangePicker
+                startDate={this.state.startDate}
+                endDate={this.state.endDate}
+                onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
+                focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                isDayBlocked={this.isDayBlocked}
+              />
+    }
+
+
     return (
       <div className="App">
         <div className="App-header">
@@ -48,14 +64,7 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
 
-        <DateRangePicker
-          startDate={this.state.startDate}
-          endDate={this.state.endDate}
-          onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
-          focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-          onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-          isDayBlocked={this.isDayBlocked}
-        />
+        {calendar}
 
         <form method="get" action="https://docs.google.com/forms/d/e/1FAIpQLSfyDWa14McgQjDDi2LYwAaG_K3krHnqg_wqnYdbJMw3mpVfiw/formResponse">
           <input type="hidden" value={startDateString || ""} name="entry.1804760333" />
