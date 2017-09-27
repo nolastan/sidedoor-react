@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-// import Calendar from './Calendar.js'
-import moment from 'moment';
 
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
+
+import moment from 'moment';
 
 class App extends Component {
 
@@ -27,36 +27,47 @@ class App extends Component {
   }
 
   isDayBlocked(date) {
-    if(!this.state.bookings.length) { return false }
     for (var i = 0; i < this.state.bookings.length; i++) {
-      if(moment(date).isBetween(this.state.bookings[i].begin, this.state.bookings[i].end)) {
+      if(moment(date).isBetween(this.state.bookings[i].begin, this.state.bookings[i].end, true)) {
         return true
       }
     }
-    return false
   }
 
   render() {
-    if(this.state.loading) {
-      return (<div>Loading…</div>)
-    } else {
-      return (
-        <div className="App">
-          <div className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h2>Welcome to React</h2>
-          </div>
-          <DateRangePicker
-            startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-            endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-            onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
-            focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-            onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-            isDayBlocked={this.isDayBlocked}
-          />
+    const startDateString = this.state.startDate &&
+      this.state.startDate.format('YYYY-MM-DD');
+
+    const endDateString = this.state.endDate &&
+      this.state.endDate.format('YYYY-MM-DD');
+
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to React</h2>
         </div>
-      );
-    }
+
+        <DateRangePicker
+          startDate={this.state.startDate}
+          endDate={this.state.endDate}
+          onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
+          focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+          onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+          isDayBlocked={this.isDayBlocked}
+        />
+
+        <form method="get" action="https://docs.google.com/forms/d/e/1FAIpQLSfyDWa14McgQjDDi2LYwAaG_K3krHnqg_wqnYdbJMw3mpVfiw/formResponse">
+          <input type="hidden" value={startDateString || ""} name="entry.1804760333" />
+          <input type="hidden" value={endDateString || ""} name="entry.1918302671" />
+          <input type="text" name="entry.92760851" placeholder="Your name" />
+          <input type="text" name="entry.1552314638" placeholder="Your phone number" />
+          <textarea name="entry.373211989" placeholder="Message"></textarea>
+          <input type="submit" />
+        </form>
+
+      </div>
+    );
   }
 }
 
